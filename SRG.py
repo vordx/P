@@ -72,7 +72,7 @@ class SpeedReadMod(loader.Module):
 		output = io.BytesIO()
 		output.name = "out.gif"
 		image = Image.new("RGB", (x, y), (210, 205, 222))
-		image.save(output, save_all=True, append_images=frames, duration=180)
+		image.save(output, save_all=True, append_images=frames, duration=220)
 		output.seek(0)
 		await message.delete()
 		await message.client.send_file(message.chat_id, output)
