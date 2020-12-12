@@ -1,4 +1,4 @@
-﻿import requests
+import requests
 from .. import loader, utils
 
 
@@ -18,8 +18,8 @@ class WeatherMod(loader.Module):
         await message.delete()
 
 
-    async def awcmd(self, message):
-        """Throws weather ascii-artom.\reusing the art: .aw <City>; Nothing."""
+    async def weathercmd(self, message):
+        """Throws weather ascii-artom.\reusing the art: .weather <City>; Nothing."""
         city = utils.get_args_raw(message)
         await message.edit("Finding weather...")
         r = requests.get(f"https://wttr.in/{city if city != None else ''}?0?q?T&lang=en")
