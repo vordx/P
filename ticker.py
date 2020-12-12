@@ -30,7 +30,7 @@ class TickerMod(loader.Module):
                "delay_typer_cfg_doc": "How long to delay showing?"}
 
     def __init__(self):
-        self.config = loader.ModuleConfig("DELAY_TICKER", 0.04, lambda m: self.strings("delay_ticker_cfg_doc", m))
+        self.config = loader.ModuleConfig("DELAY_TICKER", 0.04, lambda m: self.strings("delay_typer_cfg_doc", m))
 
     @loader.ratelimit
     async def tickercmd(self, message):
