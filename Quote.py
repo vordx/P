@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 class QuotesMod(loader.Module):
 	"""Quote a message using MishaseQuotes API"""
 	strings = {
-		"name": "Quotes",
+		"name": "vQuotes",
 		"silent_processing_cfg_doc": ("Process quote "
 									  "silently(mostly"
 									  " w/o editing)"),
@@ -125,8 +125,8 @@ class QuotesMod(loader.Module):
 
 	@loader.unrestricted
 	@loader.ratelimit
-	async def quotecmd(self, message):
-		""".quote <reply> - quote a message"""
+	async def vquotecmd(self, message):
+		""".vquote <reply> - quote a message"""
 		if not self.config["SILENT_PROCESSING"]:
 			await utils.answer(
 				message,
@@ -495,7 +495,7 @@ class QuotesMod(loader.Module):
 			if not self.config["SILENT_PROCESSING"]:
 				await utils.answer(message, self.strings("updating", message))
 			if await update(self.config["MODULE_ENDPOINT"], self.allmodules.modules, message):
-				return await self.allmodules.commands["quote"](message)
+				return await self.allmodules.commands["vquote"](message)
 			else:
 				return await utils.answer(message, self.strings("update_error", message))
 		image = io.BytesIO()
@@ -561,7 +561,7 @@ async def get_media_caption(reply_message):
 		if type(reply_message.media) == MessageMediaUnsupported:
 			return "Unsupported message media"
 		if reply_message.photo:
-			return QuotesMod.strings["media_type_photo"]
+			return mQuotesMod.strings["media_type_photo"]
 		dice = False
 		try:
 			dice = True if reply_message.dice else False
@@ -575,70 +575,70 @@ async def get_media_caption(reply_message):
 			dice_type = ""
 			dice_text = reply_message.media.value
 			if reply_message.media.emoticon == "🎲":
-				dice_type = QuotesMod.strings["dice_type_dice"]
+				dice_type = mQuotesMod.strings["dice_type_dice"]
 				return "{} {}: {}".format(reply_message.media.emoticon,
 										  dice_type,
 										  dice_text)
 			elif reply_message.media.emoticon == "🎯":
 				if dice_text == 1:
-					dice_text = QuotesMod.strings["dart_missed"]
+					dice_text = mQuotesMod.strings["dart_missed"]
 				elif dice_text == 5:
-					dice_text = QuotesMod.strings["dart_almostthere"]
+					dice_text = mQuotesMod.strings["dart_almostthere"]
 				elif dice_text == 6:
-					dice_text = QuotesMod.strings["dart_bullseye"]
+					dice_text = mQuotesMod.strings["dart_bullseye"]
 				else:
 					return "{} {}".format(reply_message.media.emoticon,
-										  QuotesMod.strings["dart_thrown"])
-				dice_type = QuotesMod.strings["dice_type_dart"]
+										  mQuotesMod.strings["dart_thrown"])
+				dice_type = mQuotesMod.strings["dice_type_dart"]
 				return "{} {}: {}".format(reply_message.media.emoticon,
 										  dice_type,
 										  dice_text)
 			elif reply_message.media.emoticon == "🏀":
 				return "{} {}".format(reply_message.media.emoticon,
-									  QuotesMod.strings["ball_thrown"])
+									  mQuotesMod.strings["ball_thrown"])
 			elif reply_message.media.emoticon == b"\xe2\x9a\xbd".decode():
 				return "{} {}".format(reply_message.media.emoticon,
-									  QuotesMod.strings["ball_kicked"])
+									  mQuotesMod.strings["ball_kicked"])
 			else:
 				return "Unsupported dice type ({}): {}"\
 					.format(reply_message.media.emoticon,
 							reply_message.media.value)
 		elif reply_message.poll:
 			if reply_message.poll.poll.quiz:
-				return QuotesMod.strings["media_type_quiz"] + \
+				return mQuotesMod.strings["media_type_quiz"] + \
 					reply_message.poll.poll.question
 			else:
-				return QuotesMod.strings["media_type_poll"] + \
+				return mQuotesMod.strings["media_type_poll"] + \
 					reply_message.poll.poll.question
 		elif reply_message.geo:
-			return QuotesMod.strings["media_type_location"]
+			return mQuotesMod.strings["media_type_location"]
 		elif reply_message.contact:
 			name = reply_message.contact.first_name + reply_message.contact.last_name
-			return QuotesMod.strings["media_type_contact"].format(
+			return mQuotesMod.strings["media_type_contact"].format(
 				name
 			)
 		elif reply_message.document:
 			if reply_message.gif:
-				return QuotesMod.strings["media_type_gif"]
+				return mQuotesMod.strings["media_type_gif"]
 			elif reply_message.video:
 				if reply_message.video.attributes[0].round_message:
-					return QuotesMod.strings["media_type_videomessage"]
+					return mQuotesMod.strings["media_type_videomessage"]
 				else:
-					return QuotesMod.strings["media_type_video"]
+					return mQuotesMod.strings["media_type_video"]
 			elif reply_message.audio:
-				return QuotesMod.strings["media_type_audio"].format(
+				return mQuotesMod.strings["media_type_audio"].format(
 					reply_message.audio.attributes[0].performer,
 					reply_message.audio.attributes[0].title
 				)
 			elif reply_message.voice:
-				return QuotesMod.strings["media_type_voice"]
+				return mQuotesMod.strings["media_type_voice"]
 			elif reply_message.sticker:
 				emoji = reply_message.file.emoji
 				caption = "{} {}".format(
 					emoji,
-					QuotesMod.strings["media_type_sticker"]
+					mQuotesMod.strings["media_type_sticker"]
 				) if emoji \
-					else QuotesMod.strings["media_type_sticker"]
+					else mQuotesMod.strings["media_type_sticker"]
 				return caption
 			elif reply_message.file:
 				try:
@@ -647,12 +647,12 @@ async def get_media_caption(reply_message):
 						reply_message.file.size
 					)
 					return "{} {} ({})".format(
-						QuotesMod.strings["media_type_file"],
+						mQuotesMod.strings["media_type_file"],
 						file_name,
 						file_size
 					)
 				except Exception:
-					return QuotesMod.strings["media_type_file"]
+					return mQuotesMod.strings["media_type_file"]
 		else:
 			return ""
 	else:
